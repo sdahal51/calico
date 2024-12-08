@@ -10,7 +10,7 @@ def test_calico_release_has_helm_chart():
         % (RELEASE_VERSION, RELEASE_VERSION)
     )
 
-    req = requests.head(chart_url)
+    req = requests.head(chart_url, timeout=60)
     assert req.status_code == 302
 
 
@@ -20,7 +20,7 @@ def test_calico_release_in_helm_index():
         % (RELEASE_VERSION, RELEASE_VERSION)
     )
 
-    req = requests.get("https://projectcalico.docs.tigera.io/charts/index.yaml")
+    req = requests.get("https://projectcalico.docs.tigera.io/charts/index.yaml", timeout=60)
     assert req.status_code == 200, "Could not get helm index"
     index = yaml.safe_load(req.text)
     # Find entry

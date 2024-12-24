@@ -101,7 +101,7 @@ def log_and_run(command, raise_exception_on_failure=True):
     try:
         logger.info("[%s] %s", datetime.datetime.now(), command)
         try:
-            results = check_output(command, shell=True, stderr=STDOUT).rstrip()
+            results = check_output(command, shell=False, stderr=STDOUT).rstrip()
         finally:
             # Restore terminal settings in case the command we ran manipulated them.  Note:
             # under concurrent access, this is still not a perfect solution since another thread's
@@ -397,12 +397,12 @@ def curl_etcd(path, options=None, recursive=True, ip=None):
             "-sL https://%s:2379/v2/keys/%s?recursive=%s %s"
             % (ETCD_CA, ETCD_CERT, ETCD_KEY, ETCD_HOSTNAME_SSL,
                path, str(recursive).lower(), " ".join(options)),
-            shell=True)
+            shell=False)
     else:
         rc = check_output(
             "curl -sL http://%s:2379/v2/keys/%s?recursive=%s %s"
             % (ip, path, str(recursive).lower(), " ".join(options)),
-            shell=True)
+            shell=False)
 
     return json.loads(rc.strip())
 
@@ -427,7 +427,7 @@ def wipe_etcd(ip):
 
     check_output("docker exec " + etcd_container_name + " sh -c '" + tls_vars +
                  "ETCDCTL_API=3 etcdctl del --prefix /calico" +
-                 "'", shell=True)
+                 "'", shell=False)
 
 
 on_failure_fns = []

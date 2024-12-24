@@ -185,8 +185,7 @@ def run(command, logerr=True, allow_fail=False, allow_codes=[], returnerr=False)
     _log.info("[%s] %s", datetime.datetime.now(), command)
     try:
         out = subprocess.check_output(command,
-                                      shell=True,
-                                      stderr=subprocess.STDOUT)
+                                      shell=False, stderr=subprocess.STDOUT)
         _log.info("Output:\n%s", out)
     except subprocess.CalledProcessError as e:
         if logerr:

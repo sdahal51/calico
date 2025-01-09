@@ -22,7 +22,6 @@ from etcd3gw.exceptions import Etcd3Exception
 import eventlet
 import greenlet
 import os
-import random
 import re
 import socket
 import sys
@@ -31,6 +30,7 @@ from networking_calico.common import config as calico_config
 from networking_calico.compat import cfg
 from networking_calico.compat import log
 from networking_calico import etcdv3
+import secrets
 
 
 LOG = log.getLogger(__name__)
@@ -114,7 +114,7 @@ class Elector(object):
                     pass
                 # In case we're repeatedly failing, sleep a little before we
                 # retry.
-                retry_time = 1 + random.random()
+                retry_time = 1 + secrets.SystemRandom().random()
                 LOG.info("Retrying leader election in %.1f seconds",
                          retry_time)
                 eventlet.sleep(retry_time)

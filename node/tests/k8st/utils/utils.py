@@ -17,12 +17,12 @@ import functools
 import json
 import logging
 import os
-import random
 import string
 import subprocess
 import time
 
 from kubernetes import client, config
+import secrets
 
 _log = logging.getLogger(__name__)
 
@@ -232,7 +232,7 @@ EOF
 
 
 def generate_unique_id(length, prefix=""):
-    random_string = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(length))
+    random_string = ''.join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(length))
     return "%s-%s" % (prefix, random_string)
 
 

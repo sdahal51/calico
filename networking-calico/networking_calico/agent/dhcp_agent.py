@@ -25,6 +25,8 @@ import sys
 import time
 
 import eventlet
+from security import safe_command
+
 eventlet.monkey_patch()
 
 from neutron.agent.dhcp.agent import DhcpAgent
@@ -212,7 +214,7 @@ class MTUWatcher(object):
     # -----------------------------------------------------------------
 
     def process_command(self, command, running_event=None, exited_event=None):
-        process = subprocess.Popen(command, stdout=subprocess.PIPE)
+        process = safe_command.run(subprocess.Popen, command, stdout=subprocess.PIPE)
         while True:
             line = process.stdout.readline()
             if not line:

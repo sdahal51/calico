@@ -102,7 +102,7 @@ class TieredPolicyWorkloads(TestBase):
 
     def delete_all(self, resource):
         # Grab all objects of a resource type
-        objects = yaml.load(self.hosts[0].calicoctl("get %s -o yaml" % resource))
+        objects = yaml.load(self.hosts[0].calicoctl("get %s -o yaml" % resource), Loader=yaml.SafeLoader)
         # and delete them (if there are any)
         if len(objects) > 0:
             _log.info("objects: %s", objects)

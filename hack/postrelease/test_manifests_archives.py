@@ -1,8 +1,8 @@
-import requests
 import tarfile
 from nose.tools import with_setup
 
 from versions import RELEASE_VERSION
+from security import safe_requests
 
 url = "https://github.com/projectcalico/calico/releases/download/{v}/release-{v}.tgz".format(
     v=RELEASE_VERSION
@@ -24,7 +24,7 @@ manifest_list = [
 
 
 def setup_archive():
-    response = requests.get(url, stream=True)
+    response = safe_requests.get(url, stream=True)
     global file
     file = tarfile.open(fileobj=response.raw, mode="r|gz")
 

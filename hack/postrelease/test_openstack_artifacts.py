@@ -1,9 +1,9 @@
 import os
 import re
-import requests
 import yaml
 from parameterized import parameterized
 from versions import RELEASE_STREAM, RELEASE_VERSION
+from security import safe_requests
 
 PPA_VER = RELEASE_STREAM.replace("v", "calico-")
 UBUNTU_VERSIONS = ["bionic", "focal", "trusty", "xenial"]
@@ -43,13 +43,13 @@ for component in ["felix"]:
 
 @parameterized(URLS)
 def test_artifact_url(url):
-    resp = requests.get(url, stream=True)
+    resp = safe_requests.get(url, stream=True)
     print("[INFO] %s: %s" % (resp.status_code, url))
     assert resp.status_code == 200, "Bad response from %s" % url
 
 
 def test_rpm_repo_avail():
-    req = requests.get("http://binaries.projectcalico.org/rpm/%s" % PPA_VER)
+    req = safe_requests.get("http://binaries.projectcalico.org/rpm/%s" % PPA_VER)
     assert req.status_code == 200, "PPA version %s not found" % PPA_VER
 
 

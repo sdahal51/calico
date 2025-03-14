@@ -24,7 +24,7 @@ manifest_list = [
 
 
 def setup_archive():
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, timeout=60)
     global file
     file = tarfile.open(fileobj=response.raw, mode="r|gz")
 

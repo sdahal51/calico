@@ -6,12 +6,12 @@ from versions import RELEASE_VERSION
 def test_calico_release_has_windows_zip():
     req = requests.head(
         "https://github.com/projectcalico/calico/releases/download/%s/calico-windows-%s.zip"
-        % (RELEASE_VERSION, RELEASE_VERSION)
-    )
+        % (RELEASE_VERSION, RELEASE_VERSION), 
+    timeout=60)
     assert req.status_code == 302
 
 def test_calico_windows_script_uses_expected_install_zip():
-    resp = requests.get('https://github.com/projectcalico/calico/releases/download/%s/install-calico-windows.ps1' % RELEASE_VERSION)
+    resp = requests.get('https://github.com/projectcalico/calico/releases/download/%s/install-calico-windows.ps1' % RELEASE_VERSION, timeout=60)
     lines = resp.text.split('\n')
 
     # Go through install-calico-windows.ps1 and extract the powershell variables
@@ -30,5 +30,5 @@ def test_calico_windows_script_uses_expected_install_zip():
 
     assert base_url != "" and release_file != ""
 
-    resp = requests.head(base_url + release_file)
+    resp = requests.head(base_url + release_file, timeout=60)
     assert resp.status_code == 302

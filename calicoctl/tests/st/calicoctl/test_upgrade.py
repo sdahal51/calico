@@ -14,7 +14,6 @@
 
 import logging
 import os
-import random
 
 import yaml
 import json
@@ -23,6 +22,7 @@ from nose_parameterized import parameterized
 from tests.st.utils.utils import calicoctl, \
     name, wipe_etcd, get_ip, clean_calico_data
 from tests.st.utils.v1_data import data
+import secrets
 
 ETCD_SCHEME = os.environ.get("ETCD_SCHEME", "http")
 ETCD_CA = os.environ.get("ETCD_CA_CERT_FILE", "")
@@ -64,7 +64,7 @@ tests = [
     # TODO: Add some error text once new validator lands and gives this test a sane error message
     ("profile_long_labels", True),
 ]
-random.shuffle(tests)
+secrets.SystemRandom().shuffle(tests)
 
 def _test_converter(testname, fail_expected, error_text=None, format="yaml"):
     """

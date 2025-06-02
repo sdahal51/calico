@@ -1,9 +1,9 @@
 import json
 import os
-import requests
 import subprocess
 import yaml
 from versions import RELEASE_VERSION, OPERATOR_VERSION, VPP_VERSION
+from security import safe_requests
 
 OPERATOR_IMAGE = "quay.io/tigera/operator:%s" % OPERATOR_VERSION
 
@@ -52,7 +52,7 @@ def test_quay_release_tag_present():
         if image_name not in EXCLUDED_IMAGES:
             print("[INFO] checking quay.io/%s:%s" % (image_name, RELEASE_VERSION))
             headers = {"content-type": "application/json"}
-            req = requests.get(
+            req = safe_requests.get(
                 "https://quay.io/api/v1/repository/%s/tag/%s/images"
                 % (image_name, RELEASE_VERSION),
                 headers=headers,
@@ -154,7 +154,7 @@ def test_vpp_branch():
 def test_operator_image_present():
     print("[INFO] checking %s" % OPERATOR_IMAGE)
     headers = {"content-type": "application/json"}
-    req = requests.get(
+    req = safe_requests.get(
         "https://quay.io/api/v1/repository/tigera/operator/tag/%s/images"
         % (OPERATOR_VERSION),
         headers=headers,

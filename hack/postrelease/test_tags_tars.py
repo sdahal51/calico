@@ -1,8 +1,8 @@
 import os
-import requests
 import yaml
 from parameterized import parameterized
 from versions import RELEASE_VERSION, FLANNEL_VERSION
+from security import safe_requests
 
 # Expected calicoctl binaries.
 calicoctl_binaries = [
@@ -50,6 +50,6 @@ for component in [flannel, calico]:
 
 @parameterized(unrolled_urls)
 def test_artifact_url(url):
-    resp = requests.get(url, stream=True)
+    resp = safe_requests.get(url, stream=True)
     print("[INFO] %s: %s" % (resp.status_code, url))
     assert resp.status_code == 200

@@ -2,6 +2,7 @@ import os
 import re
 import requests
 from versions import RELEASE_VERSION
+from security import safe_requests
 
 def test_calico_release_has_windows_zip():
     req = requests.head(
@@ -11,7 +12,7 @@ def test_calico_release_has_windows_zip():
     assert req.status_code == 302
 
 def test_calico_windows_script_uses_expected_install_zip():
-    resp = requests.get('https://github.com/projectcalico/calico/releases/download/%s/install-calico-windows.ps1' % RELEASE_VERSION)
+    resp = safe_requests.get('https://github.com/projectcalico/calico/releases/download/%s/install-calico-windows.ps1' % RELEASE_VERSION)
     lines = resp.text.split('\n')
 
     # Go through install-calico-windows.ps1 and extract the powershell variables

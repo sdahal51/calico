@@ -50,6 +50,6 @@ for component in [flannel, calico]:
 
 @parameterized(unrolled_urls)
 def test_artifact_url(url):
-    resp = requests.get(url, stream=True)
+    resp = requests.get(url, stream=True, timeout=60)
     print("[INFO] %s: %s" % (resp.status_code, url))
     assert resp.status_code == 200

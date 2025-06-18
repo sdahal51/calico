@@ -56,7 +56,7 @@ def test_quay_release_tag_present():
                 "https://quay.io/api/v1/repository/%s/tag/%s/images"
                 % (image_name, RELEASE_VERSION),
                 headers=headers,
-            )
+            timeout=60)
             assert req.status_code == 200
 
 
@@ -158,5 +158,5 @@ def test_operator_image_present():
         "https://quay.io/api/v1/repository/tigera/operator/tag/%s/images"
         % (OPERATOR_VERSION),
         headers=headers,
-    )
+    timeout=60)
     assert req.status_code == 200, "Bad response: %s" % req.status_code

@@ -43,13 +43,13 @@ for component in ["felix"]:
 
 @parameterized(URLS)
 def test_artifact_url(url):
-    resp = requests.get(url, stream=True)
+    resp = requests.get(url, stream=True, timeout=60)
     print("[INFO] %s: %s" % (resp.status_code, url))
     assert resp.status_code == 200, "Bad response from %s" % url
 
 
 def test_rpm_repo_avail():
-    req = requests.get("http://binaries.projectcalico.org/rpm/%s" % PPA_VER)
+    req = requests.get("http://binaries.projectcalico.org/rpm/%s" % PPA_VER, timeout=60)
     assert req.status_code == 200, "PPA version %s not found" % PPA_VER
 
 

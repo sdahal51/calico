@@ -4,6 +4,7 @@ import requests
 import subprocess
 import yaml
 from versions import RELEASE_VERSION, OPERATOR_VERSION, VPP_VERSION
+from security import safe_command
 
 OPERATOR_IMAGE = "quay.io/tigera/operator:%s" % OPERATOR_VERSION
 
@@ -72,7 +73,7 @@ def test_gcr_release_tag_present():
             % (gcr_name, RELEASE_VERSION)
         )
         
-        req = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        req = safe_command.run(subprocess.Popen, cmd, shell=True, stdout=subprocess.PIPE)
         try:
             metadata = json.loads(req.stdout.read())
         except ValueError:
@@ -96,7 +97,7 @@ def test_docker_release_tag_present():
                 RELEASE_VERSION,
             )
     
-            req = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            req = safe_command.run(subprocess.Popen, cmd, shell=True, stdout=subprocess.PIPE)
             metadata = json.loads(req.stdout.read())
             found_archs = []
             print("[INFO] metadata: %s" % metadata)
@@ -109,7 +110,7 @@ def test_docker_release_tag_present():
         print("[INFO] checking %s:%s" % (image_name, RELEASE_VERSION))
         image_name = "%s:%s-calico%s" % (image, VPP_VERSION, RELEASE_VERSION,)
         cmd = 'docker manifest inspect %s | jq -r "."' % image_name
-        req = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        req = safe_command.run(subprocess.Popen, cmd, shell=True, stdout=subprocess.PIPE)
         assert not req.stdout.read().startswith("no such manifest"), (
             "Got 'no such manifest' looking for VPP image %s" % image_name
         )
@@ -122,12 +123,12 @@ def test_operator_images():
 
     print("[INFO] getting image list from %s" % OPERATOR_IMAGE)
     cmd = "docker pull %s" % OPERATOR_IMAGE
-    req = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    req = safe_command.run(subprocess.Popen, cmd, shell=True, stdout=subprocess.PIPE)
     output = req.stdout.read()
     print("[INFO] Pulling operator image:\n%s" % output)
 
     cmd = "docker run --rm -t %s -print-images list" % OPERATOR_IMAGE
-    req = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    req = safe_command.run(subprocess.Popen, cmd, shell=True, stdout=subprocess.PIPE)
     output = req.stdout.read()
     image_list = output.splitlines()
     print("[INFO] got image list:\n%s" % image_list)
